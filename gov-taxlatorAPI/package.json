@@ -1,0 +1,39 @@
+{
+	"name": "techcrush-taxlaor-project",
+	"version": "1.0.0",
+	"description": "---",
+	"main": "server.js",
+	"scripts": {
+		"start": "node server.js",
+		"dev": "nodemon server.js",
+		"pdf": "md-to-pdf public/docs/API_DOCUMENTATION.md"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/christogonus834/taxlator.git"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/christogonus834/taxlator/issues"
+	},
+	"homepage": "https://github.com/christogonus834/taxlator#readme",
+	"dependencies": {
+		"bcryptjs": "^3.0.3",
+		"cookie-parser": "^1.4.7",
+		"cors": "^2.8.5",
+		"dotenv": "^17.2.3",
+		"express": "^5.2.1",
+		"googleapis": "^170.1.0",
+		"helmet": "^8.1.0",
+		"joi": "^18.0.2",
+		"jsonwebtoken": "^9.0.3",
+		"mongoose": "^9.1.1",
+		"nodemailer": "^7.0.12",
+		"nodemon": "^3.1.11"
+	},
+	"devDependencies": {
+		"md-to-pdf": "^5.2.5"
+	}
+}
