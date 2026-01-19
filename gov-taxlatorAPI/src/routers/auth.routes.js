@@ -1,25 +1,31 @@
 // src/routers/auth.routes.js
 const express = require("express");
-const authController = require("../controllers/authController");
-const authMiddleware = require("../middlewares/authMiddleware");
-
 const router = express.Router();
 
-/* ================= AUTH USER ================= */
-// GET /api/auth/me
-router.get("/me", authMiddleware, authController.me);
+const authController = require("../controllers/authController");
+const { protect } = require("../middlewares/authMiddleware");
 
 /* ================= AUTH ROUTES ================= */
+
+// signup
 router.post("/signup", authController.signup);
+
+// send verification code
+router.post("/send-code", authController.sendVerificationCode);
+
+// verify email
+router.post("/verify-email", authController.verifyEmail);
+
+// signin
 router.post("/signin", authController.signin);
-router.post("/signout", authMiddleware, authController.signout);
 
-router.post("/verifyEmail", authController.verifyEmail);
-router.post("/sendVerificationCode", authController.sendVerificationCode);
+// me (protected)
+router.get("/me", protect, authController.me);
 
-/* ================= PASSWORD ================= */
-router.post("/changePassword", authMiddleware, authController.changePassword);
-router.post("/forgotPassword", authController.forgotPassword);
-router.post("/resetPassword", authController.resetPassword);
+// change password (protected)
+router.post("/change-password", protect, authController.changePassword);
+
+// signout
+router.post("/signout", authController.signout);
 
 module.exports = router;

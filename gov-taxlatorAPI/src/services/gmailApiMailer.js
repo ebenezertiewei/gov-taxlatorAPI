@@ -22,6 +22,9 @@ function buildRawEmail({ from, to, subject, html, text }) {
 		.replace(/\r|\n/g, " ")
 		.trim();
 
+	const plainText = text || " ";
+	const htmlText = html || "<p> </p>";
+
 	const lines = [
 		`From: ${safeFrom}`,
 		`To: ${safeTo}`,
@@ -31,15 +34,15 @@ function buildRawEmail({ from, to, subject, html, text }) {
 		"",
 		`--${boundary}`,
 		'Content-Type: text/plain; charset="UTF-8"',
-		"Content-Transfer-Encoding: 7bit",
+		"Content-Transfer-Encoding: base64",
 		"",
-		text || "",
+		Buffer.from(plainText).toString("base64"),
 		"",
 		`--${boundary}`,
 		'Content-Type: text/html; charset="UTF-8"',
-		"Content-Transfer-Encoding: 7bit",
+		"Content-Transfer-Encoding: base64",
 		"",
-		html || "",
+		Buffer.from(htmlText).toString("base64"),
 		"",
 		`--${boundary}--`,
 		"",
@@ -105,7 +108,7 @@ async function sendGmail({ to, subject, html, text }) {
 		!env.GMAIL_SENDER
 	) {
 		const e = new Error(
-			"Missing Gmail API environment variables (GMAIL_CLIENT_ID / GMAIL_CLIENT_SECRET / GMAIL_REFRESH_TOKEN / GMAIL_SENDER)"
+			"Missing Gmail API environment variables (GMAIL_CLIENT_ID / GMAIL_CLIENT_SECRET / GMAIL_REFRESH_TOKEN / GMAIL_SENDER)",
 		);
 		e.status = 500;
 		throw e;
@@ -143,7 +146,7 @@ async function sendGmail({ to, subject, html, text }) {
 		const e = new Error(
 			gErr.description
 				? `Gmail API error: ${gErr.error} (${gErr.description})`
-				: `Gmail API error: ${gErr.error}`
+				: `Gmail API error: ${gErr.error}`,
 		);
 		e.status = gErr.status;
 		e.code = gErr.error;
