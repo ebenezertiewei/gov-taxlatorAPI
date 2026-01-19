@@ -1,6 +1,5 @@
 // taxlator/src/pages/tax/PayePit.tsx
 
-
 //  TO BE FIXED LATER
 import { useMemo, useState } from "react";
 import TaxPageLayout from "./TaxPageLayout";
@@ -44,7 +43,7 @@ export default function PayePit() {
 
 	const grossIncomeNumber = useMemo(
 		() => parseNumber(grossAnnualIncome),
-		[grossAnnualIncome]
+		[grossAnnualIncome],
 	);
 
 	async function calculate() {
@@ -68,14 +67,14 @@ export default function PayePit() {
 
 			const { data } = await api.post<ApiSuccess<unknown> | ApiFail>(
 				ENDPOINTS.taxCalculate,
-				payload
+				payload,
 			);
 
 			if (!("success" in data) || data.success !== true) {
 				setError(
 					(data as ApiFail).message ||
 						(data as ApiFail).error ||
-						"PAYE/PIT calculation failed"
+						"PAYE/PIT calculation failed",
 				);
 				return;
 			}
@@ -97,7 +96,7 @@ export default function PayePit() {
 				e.response?.data?.message ||
 					e.response?.data?.error ||
 					e.message ||
-					"PAYE/PIT calculation failed"
+					"PAYE/PIT calculation failed",
 			);
 		} finally {
 			setBusy(false);
@@ -124,22 +123,37 @@ export default function PayePit() {
 				</div>
 			)}
 
-			<label className="text-xs font-semibold text-slate-700">
-				Gross Annual Income
-			</label>
-			<input
-				className="mt-1 w-full rounded border px-3 py-2 text-sm"
-				value={formatNumber(grossAnnualIncome)}
-				onChange={(e) => setGrossAnnualIncome(e.target.value.replace(/,/g, ""))}
-				placeholder="₦ 0"
-				inputMode="numeric"
-			/>
+			<div className="space-y-1">
+				<label
+					htmlFor="grossAnnualIncome"
+					className="text-sm font-bold text-slate-700"
+				>
+					Gross Annual Income
+				</label>
+
+				<div className="relative">
+					<span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">
+						₦
+					</span>
+
+					<input
+						id="grossAnnualIncome"
+						className="w-full box-border rounded border pl-8 pr-3 py-2 text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-0"
+						value={formatNumber(grossAnnualIncome)}
+						onChange={(e) =>
+							setGrossAnnualIncome(e.target.value.replace(/,/g, ""))
+						}
+						placeholder="0"
+						inputMode="numeric"
+					/>
+				</div>
+			</div>
 
 			{/* Deduction Toggles */}
 			<div className="mt-4 space-y-3">
 				<label className="flex items-center justify-between border rounded-xl p-3">
 					<div>
-						<div className="font-semibold text-sm">Rent Relief (CRA)</div>
+						<div className="font-semibold text-xs">Rent Relief</div>
 						<div className="text-xs text-slate-600">20% of gross income</div>
 					</div>
 					<input
@@ -151,7 +165,7 @@ export default function PayePit() {
 
 				<label className="flex items-center justify-between border rounded-xl p-3">
 					<div>
-						<div className="font-semibold text-sm">Pension Contribution</div>
+						<div className="font-semibold text-xs">Pension Contribution</div>
 						<div className="text-xs text-slate-600">8% deduction</div>
 					</div>
 					<input
@@ -163,7 +177,7 @@ export default function PayePit() {
 
 				<label className="flex items-center justify-between border rounded-xl p-3">
 					<div>
-						<div className="font-semibold text-sm">National Housing Fund</div>
+						<div className="font-semibold text-xs">National Housing Fund</div>
 						<div className="text-xs text-slate-600">2.5% deduction</div>
 					</div>
 					<input
@@ -175,8 +189,8 @@ export default function PayePit() {
 
 				<label className="flex items-center justify-between border rounded-xl p-3">
 					<div>
-						<div className="font-semibold text-sm">Health Insurance</div>
-						<div className="text-xs text-slate-600">1.5% deduction</div>
+						<div className="font-semibold text-xs">Health Insurance</div>
+						<div className="text-xs text-slate-600">5% deduction</div>
 					</div>
 					<input
 						type="checkbox"

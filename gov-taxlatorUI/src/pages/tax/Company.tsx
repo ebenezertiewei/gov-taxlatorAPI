@@ -62,7 +62,7 @@ export default function Company() {
 	const revenueN = useMemo(() => toNumberSafe(form.revenue), [form.revenue]);
 	const businessExpensesN = useMemo(
 		() => toNumberSafe(form.businessExpenses),
-		[form.businessExpenses]
+		[form.businessExpenses],
 	);
 
 	function validate(): boolean {
@@ -108,7 +108,7 @@ export default function Company() {
 
 			const { data } = await api.post<ApiSuccess<unknown> | ApiFail>(
 				ENDPOINTS.taxCalculate,
-				payload
+				payload,
 			);
 
 			if (!isApiSuccess(data)) {
@@ -164,11 +164,11 @@ export default function Company() {
 				</div>
 			) : null}
 
-			<label className="text-xs font-semibold text-slate-700">Revenue</label>
+			<label className="text-sm font-bold text-slate-700">Revenue</label>
 			<div className="mt-1 flex items-center gap-2">
 				<span className="text-sm text-slate-600">₦</span>
 				<input
-					className={`w-full rounded border px-3 py-2 text-sm ${
+					className={`w-full box-border rounded border px-3 py-2 pr-12 text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-0 ${
 						errors.revenue ? "border-red-300" : ""
 					}`}
 					value={form.revenue}
@@ -185,9 +185,7 @@ export default function Company() {
 			) : null}
 
 			<div className="mt-4">
-				<label className="text-xs font-semibold text-slate-700">
-					Company Size
-				</label>
+				<label className="text-sm font-bold text-slate-700">Company Size</label>
 				<select
 					className={`mt-1 w-full rounded border px-3 py-2 text-sm bg-white ${
 						errors.companySize ? "border-red-300" : ""
@@ -206,14 +204,14 @@ export default function Company() {
 					<option value="LARGE">Large Company</option>
 				</select>
 				{errors.companySize ? (
-					<div className="mt-1 text-xs text-red-600">{errors.companySize}</div>
+					<div className="mt-1 text-sm text-red-600">{errors.companySize}</div>
 				) : null}
 			</div>
 
 			<div className="mt-4 rounded-xl border p-4 bg-white">
 				<div className="flex items-start justify-between gap-3">
 					<div>
-						<div className="text-sm font-semibold text-slate-900">
+						<div className="text-xs font-semibold text-slate-900">
 							Include Business Expenses
 						</div>
 						<div className="text-xs text-slate-600 mt-1">
@@ -244,7 +242,7 @@ export default function Company() {
 						<div className="mt-1 flex items-center gap-2">
 							<span className="text-sm text-slate-600">₦</span>
 							<input
-								className={`w-full rounded border px-3 py-2 text-sm ${
+								className={`w-full box-border rounded border px-3 py-2 pr-12 text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-0 ${
 									errors.businessExpenses ? "border-red-300" : ""
 								}`}
 								value={form.businessExpenses}

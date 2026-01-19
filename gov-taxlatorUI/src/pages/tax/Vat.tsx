@@ -33,11 +33,11 @@ function formatWithCommas(value: string): string {
 export default function Vat() {
 	const { authenticated } = useAuth();
 
-	const [transactionAmount, setTransactionAmount] = useState("200,000");
+	const [transactionAmount, setTransactionAmount] = useState("");
 	const [calculationType, setCalculationType] =
 		useState<VatCalculationType>("add");
 	const [transactionType, setTransactionType] = useState<VatTransactionType>(
-		"Domestic sale/Purchase"
+		"Domestic sale/Purchase",
 	);
 
 	const [busy, setBusy] = useState(false);
@@ -63,7 +63,7 @@ export default function Vat() {
 
 			const { data } = await api.post<ApiSuccess<unknown> | ApiFail>(
 				ENDPOINTS.vatCalculate,
-				payload
+				payload,
 			);
 
 			if (!("success" in data) || data.success !== true) {
@@ -91,7 +91,7 @@ export default function Vat() {
 				e.response?.data?.message ||
 					e.response?.data?.error ||
 					e.message ||
-					"VAT calculation failed"
+					"VAT calculation failed",
 			);
 		} finally {
 			setBusy(false);
@@ -120,16 +120,26 @@ export default function Vat() {
 				</div>
 			) : null}
 
-			<label className="text-xs font-semibold text-slate-700">
+			<label className="text-sm font-semibold text-slate-700">
 				Transaction Amount
 			</label>
-			<input
-				className="mt-1 w-full rounded border px-3 py-2 text-sm"
-				value={transactionAmount}
-				onChange={(e) => setTransactionAmount(formatWithCommas(e.target.value))}
-				placeholder="200,000"
-				inputMode="decimal"
-			/>
+
+			<div className="relative">
+				<span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">
+					₦
+				</span>
+				
+				<input
+					className="w-full rounded border pl-7 pr-3 py-2 text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
+					value={transactionAmount}
+					onChange={(e) => {
+						const raw = e.target.value.replace(/[^\d.]/g, "");
+						setTransactionAmount(raw ? formatWithCommas(raw) : "");
+					}}
+					placeholder="0"
+					inputMode="decimal"
+				/>
+			</div>
 
 			{/* Add/Remove toggle buttons */}
 			<div className="mt-4 grid grid-cols-2 gap-4">
@@ -178,10 +188,10 @@ export default function Vat() {
 							t === "Domestic sale/Purchase"
 								? "Domestic sale/Purchase 7.5%"
 								: t === "Digital Services"
-								? "Digital Services 7.5%"
-								: t === "Export/International"
-								? "Export/International 0%"
-								: "Exempt Items (no VAT)";
+									? "Digital Services 7.5%"
+									: t === "Export/International"
+										? "Export/International 0%"
+										: "Exempt Items (no VAT)";
 
 						return (
 							<button

@@ -39,7 +39,7 @@ export default function FreeLancer() {
 
 	const grossIncomeNumber = useMemo(
 		() => parseNumber(grossAnnualIncome),
-		[grossAnnualIncome]
+		[grossAnnualIncome],
 	);
 
 	async function calculate() {
@@ -56,7 +56,7 @@ export default function FreeLancer() {
 
 			const { data } = await api.post<ApiSuccess<unknown> | ApiFail>(
 				ENDPOINTS.taxCalculate,
-				payload
+				payload,
 			);
 
 			if (!("success" in data) || data.success !== true) {
@@ -84,7 +84,7 @@ export default function FreeLancer() {
 				e.response?.data?.message ||
 					e.response?.data?.error ||
 					e.message ||
-					"Freelancer calculation failed"
+					"Freelancer calculation failed",
 			);
 		} finally {
 			setBusy(false);
@@ -111,32 +111,64 @@ export default function FreeLancer() {
 				</div>
 			)}
 
-			<label className="text-xs font-semibold text-slate-700">
-				Gross Annual Income
-			</label>
-			<input
-				className="mt-1 w-full rounded border px-3 py-2 text-sm"
-				value={formatNumber(grossAnnualIncome)}
-				onChange={(e) => setGrossAnnualIncome(e.target.value.replace(/,/g, ""))}
-				placeholder="₦ 0"
-				inputMode="numeric"
-			/>
+			{/* Gross Annual Income */}
+			<div className="space-y-1">
+				<label
+					htmlFor="grossAnnualIncome"
+					className="text-sm font-bold text-slate-700"
+				>
+					Gross Annual Income
+				</label>
 
-			<label className="text-xs font-semibold text-slate-700 mt-4 block">
-				Pension Contributions
-			</label>
-			<input
-				className="mt-1 w-full rounded border px-3 py-2 text-sm"
-				value={formatNumber(pensionContrib)}
-				onChange={(e) => setPensionContrib(e.target.value.replace(/,/g, ""))}
-				placeholder="₦ 0"
-				inputMode="numeric"
-			/>
+				<div className="relative">
+					<span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">
+						₦
+					</span>
+
+					<input
+						id="grossAnnualIncome"
+						className="w-full box-border rounded border pl-8 pr-3 py-2 text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-0"
+						value={formatNumber(grossAnnualIncome)}
+						onChange={(e) =>
+							setGrossAnnualIncome(e.target.value.replace(/,/g, ""))
+						}
+						placeholder="0"
+						inputMode="numeric"
+					/>
+				</div>
+			</div>
+
+			{/* Pension Contributions */}
+			<div className="space-y-1 mt-4">
+				<label
+					htmlFor="pensionContrib"
+					className="text-xs font-bold text-slate-700"
+				>
+					Pension Contributions
+				</label>
+
+				<div className="relative">
+					<span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">
+						₦
+					</span>
+
+					<input
+						id="pensionContrib"
+						className="w-full box-border rounded border pl-8 pr-3 py-2 text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-0"
+						value={formatNumber(pensionContrib)}
+						onChange={(e) =>
+							setPensionContrib(e.target.value.replace(/,/g, ""))
+						}
+						placeholder="0"
+						inputMode="numeric"
+					/>
+				</div>
+			</div>
 
 			<div className="mt-4 rounded-xl border p-4 bg-white">
 				<div className="flex items-start justify-between gap-3">
 					<div>
-						<div className="text-sm font-semibold text-slate-900">
+						<div className="text-xs font-semibold text-slate-900">
 							Include Business Expenses
 						</div>
 						<div className="text-xs text-slate-600 mt-1">
@@ -153,19 +185,30 @@ export default function FreeLancer() {
 				</div>
 
 				{includeExpenses && (
-					<div className="mt-4">
-						<label className="text-xs font-semibold text-slate-700 block">
+					<div className="mt-4 space-y-1">
+						<label
+							htmlFor="businessExpenses"
+							className="text-xs font-semibold text-slate-700"
+						>
 							Total Business Expenses
 						</label>
-						<input
-							className="mt-1 w-full rounded border px-3 py-2 text-sm"
-							value={formatNumber(businessExpenses)}
-							onChange={(e) =>
-								setBusinessExpenses(e.target.value.replace(/,/g, ""))
-							}
-							placeholder="₦ 0"
-							inputMode="numeric"
-						/>
+
+						<div className="relative">
+							<span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">
+								₦
+							</span>
+
+							<input
+								id="businessExpenses"
+								className="w-full box-border rounded border pl-8 pr-3 py-2 text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-0"
+								value={formatNumber(businessExpenses)}
+								onChange={(e) =>
+									setBusinessExpenses(e.target.value.replace(/,/g, ""))
+								}
+								placeholder="0"
+								inputMode="numeric"
+							/>
+						</div>
 					</div>
 				)}
 			</div>
