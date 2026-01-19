@@ -1,5 +1,4 @@
 // taxlator/src/components/Footer.tsx
-
 import {
 	FaFacebookF,
 	FaInstagram,
@@ -10,13 +9,12 @@ import { FaApple, FaAndroid } from "react-icons/fa";
 
 export default function Footer() {
 	return (
-		<footer className="bg-white border-t">
+		<footer className="bg-white border-t font-bold w-full">
 			<div className="max-w-6xl mx-auto px-4 py-10">
-				<div className="flex flex-row justify-between gap-8">
+				<div className="flex flex-col lg:flex-row lg:justify-between gap-8">
 					{/* Copyright */}
 					<div className="text-sm text-slate-600">
 						<p>© {new Date().getFullYear()} Taxlator.</p>
-						<p>For informational purposes only.</p>
 					</div>
 
 					{/* About */}
@@ -33,7 +31,7 @@ export default function Footer() {
 					</div>
 
 					{/* Help */}
-					<div className="space-y-2 text-sm text-slate-700">
+					<div className="space-y-2 text-sm text-slate-700 ">
 						<a href="/#help" className="block hover:text-brand-700">
 							Help
 						</a>

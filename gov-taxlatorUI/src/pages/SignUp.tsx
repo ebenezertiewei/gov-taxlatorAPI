@@ -40,7 +40,7 @@ export default function SignUp() {
 	}
 
 	return (
-		<div className="bg-slate-200 min-h-[80vh] flex items-center justify-center px-4 py-10">
+		<div className="bg-slate-200 min-h-[80vh] w-full flex items-center justify-center px-4 py-10">
 			<div className="w-full max-w-md bg-white rounded-2xl border shadow-soft overflow-hidden">
 				<div className="p-6 border-b text-center">
 					<div className="w-12 h-12 mx-auto rounded bg-brand-700 text-white grid place-items-center font-bold">
@@ -52,7 +52,8 @@ export default function SignUp() {
 					</div>
 				</div>
 
-				<form className="p-6" onSubmit={onSubmit}>
+				{/* SIGNUP FORM */}
+				<form className="p-6 overflow-x-hidden" onSubmit={onSubmit}>
 					{error && (
 						<div className="mb-3 text-sm text-red-700 bg-red-50 border border-red-200 rounded p-2">
 							{error}
@@ -63,7 +64,10 @@ export default function SignUp() {
 						First Name
 					</label>
 					<input
-						className="mt-1 w-full rounded border px-3 py-2 text-sm"
+						className="
+			mt-1 w-full box-border rounded border px-3 py-2 text-base sm:text-sm
+			focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-0
+		"
 						value={firstName}
 						onChange={(e) => setFirstName(e.target.value)}
 						placeholder="Enter first name"
@@ -74,7 +78,10 @@ export default function SignUp() {
 						Last Name
 					</label>
 					<input
-						className="mt-1 w-full rounded border px-3 py-2 text-sm"
+						className="
+			mt-1 w-full box-border rounded border px-3 py-2 text-base sm:text-sm
+			focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-0
+		"
 						value={lastName}
 						onChange={(e) => setLastName(e.target.value)}
 						placeholder="Enter last name"
@@ -85,7 +92,11 @@ export default function SignUp() {
 						Email Address
 					</label>
 					<input
-						className="mt-1 w-full rounded border px-3 py-2 text-sm"
+						type="email"
+						className="
+			mt-1 w-full box-border rounded border px-3 py-2 text-base sm:text-sm
+			focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-0
+		"
 						value={email}
 						onChange={(e) => setEmail(e.target.value)}
 						placeholder="Enter your email"
@@ -99,7 +110,10 @@ export default function SignUp() {
 					{/* 🔐 PASSWORD WITH TOGGLE */}
 					<div className="relative mt-1">
 						<input
-							className="w-full rounded border px-3 py-2 pr-10 text-sm"
+							className="
+				w-full box-border rounded border px-3 py-2 pr-12 text-base sm:text-sm
+				focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-0
+			"
 							type={showPassword ? "text" : "password"}
 							value={password}
 							onChange={(e) => setPassword(e.target.value)}

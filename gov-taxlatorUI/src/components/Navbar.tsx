@@ -1,7 +1,9 @@
+// src/components/Navbar.tsx
 import React, { useState } from "react";
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate, useLocation } from "react-router-dom";
 import CalculateModal from "./CalculateModal";
 import { useAuth } from "../state/useAuth";
+import { Menu, X } from "lucide-react";
 
 function NavItem({
 	to,
@@ -31,10 +33,14 @@ function NavItem({
 
 export default function Navbar() {
 	const navigate = useNavigate();
+	const location = useLocation();
 	const { authenticated, logout } = useAuth();
 
 	const [openCalc, setOpenCalc] = useState(false);
 	const [mobileOpen, setMobileOpen] = useState(false);
+
+	const isCalculateActive =
+		openCalc || location.pathname.startsWith("/calculate");
 
 	function closeMobile() {
 		setMobileOpen(false);
@@ -42,8 +48,9 @@ export default function Navbar() {
 
 	return (
 		<>
-			<header className="bg-white border-b">
+			<header className="bg-white border-b w-full">
 				<div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
+					{/* Logo */}
 					<Link to="/" className="flex items-center gap-2 shrink-0">
 						<div className="w-9 h-9 rounded bg-brand-700 text-white grid place-items-center font-bold">
 							T
@@ -56,7 +63,7 @@ export default function Navbar() {
 						</div>
 					</Link>
 
-					{/* Desktop nav */}
+					{/* DESKTOP NAV */}
 					<nav className="hidden md:flex items-center gap-2">
 						<NavLink
 							to="/"
@@ -71,16 +78,35 @@ export default function Navbar() {
 							Home
 						</NavLink>
 
+						{/* CALCULATE (MANUAL ACTIVE) */}
 						<button
 							onClick={() => setOpenCalc(true)}
-							className="px-3 py-2 rounded text-sm font-medium text-slate-700 hover:text-brand-700 hover:bg-slate-50"
+							className={`px-3 py-2 rounded text-sm font-medium ${
+								isCalculateActive
+									? "text-brand-700 bg-brand-50"
+									: "text-slate-700 hover:text-brand-700 hover:bg-slate-50"
+							}`}
 						>
 							Calculate
 						</button>
 
-						{/* NEW: History */}
+						{authenticated && (
+							<NavLink
+								to="/history"
+								className={({ isActive }) =>
+									`px-3 py-2 rounded text-sm font-medium ${
+										isActive
+											? "text-brand-700 bg-brand-50"
+											: "text-slate-700 hover:text-brand-700 hover:bg-slate-50"
+									}`
+								}
+							>
+								History
+							</NavLink>
+						)}
+
 						<NavLink
-							to="/history"
+							to="/taxguide"
 							className={({ isActive }) =>
 								`px-3 py-2 rounded text-sm font-medium ${
 									isActive
@@ -89,44 +115,36 @@ export default function Navbar() {
 								}`
 							}
 						>
-							History
+							Tax Guides
 						</NavLink>
 
-						<a
-							className="px-3 py-2 rounded text-sm font-medium text-slate-700 hover:text-brand-700 hover:bg-slate-50"
-							href="/taxguide"
-						>
-							Tax Guides
-						</a>
-						<a
-							className="px-3 py-2 rounded text-sm font-medium text-slate-700 hover:text-brand-700 hover:bg-slate-50"
-							href="/about"
+						<NavLink
+							to="/about"
+							className={({ isActive }) =>
+								`px-3 py-2 rounded text-sm font-medium ${
+									isActive
+										? "text-brand-700 bg-brand-50"
+										: "text-slate-700 hover:text-brand-700 hover:bg-slate-50"
+								}`
+							}
 						>
 							About
-						</a>
-						<a
-							className="px-3 py-2 rounded text-sm font-medium text-slate-700 hover:text-brand-700 hover:bg-slate-50"
-							href="/Privacy_Policy"
-						>
-							Privacy Policy
-						</a>
-						<a
-							className="px-3 py-2 rounded text-sm font-medium text-slate-700 hover:text-brand-700 hover:bg-slate-50"
-							href="/Terms_Conditions"
-						>
-							TERMS & CONDITIONS
-						</a>
+						</NavLink>
 					</nav>
 
-					{/* Right controls */}
-					<div className="flex items-center gap-2">
-						{/* Mobile hamburger */}
+					{/* MOBILE HAMBURGER */}
+					<div className="flex items-center gap-2 w-full justify-end">
+						{/* MOBILE HAMBURGER / CLOSE */}
 						<button
 							onClick={() => setMobileOpen((v) => !v)}
-							className="md:hidden w-10 h-10 rounded border grid place-items-center hover:bg-slate-50"
-							aria-label="Open menu"
+							className="md:hidden w-9 h-9 rounded border grid place-items-center hover:bg-slate-50"
+							aria-label={mobileOpen ? "Close menu" : "Open menu"}
 						>
-							☰
+							{mobileOpen ? (
+								<X className="w-7 h-7" />
+							) : (
+								<Menu className="w-7 h-7" />
+							)}
 						</button>
 
 						{!authenticated ? (
@@ -147,8 +165,8 @@ export default function Navbar() {
 					</div>
 				</div>
 
-				{/* Mobile dropdown */}
-				{mobileOpen ? (
+				{/* MOBILE DROPDOWN */}
+				{mobileOpen && (
 					<div className="md:hidden border-t bg-white">
 						<div className="max-w-6xl mx-auto px-4 py-3 grid gap-1">
 							<NavItem to="/" onClick={closeMobile}>
@@ -160,36 +178,28 @@ export default function Navbar() {
 									closeMobile();
 									setOpenCalc(true);
 								}}
-								className="text-left text-sm font-medium px-2 py-2 rounded text-slate-700 hover:text-brand-700 hover:bg-slate-50"
+								className={`text-left text-sm font-medium px-2 py-2 rounded ${
+									isCalculateActive
+										? "text-brand-700 bg-brand-50"
+										: "text-slate-700 hover:text-brand-700 hover:bg-slate-50"
+								}`}
 							>
 								Calculate
 							</button>
 
-							<NavItem to="/history" onClick={closeMobile}>
-								History
+							{authenticated && (
+								<NavItem to="/history" onClick={closeMobile}>
+									History
+								</NavItem>
+							)}
+
+							<NavItem to="/taxguide" onClick={closeMobile}>
+								Tax Guides
 							</NavItem>
 
-							<a
-								className="block text-sm font-medium px-2 py-2 rounded text-slate-700 hover:text-brand-700 hover:bg-slate-50"
-								href="/#guides"
-								onClick={closeMobile}
-							>
-								Tax Guides
-							</a>
-							<a
-								className="block text-sm font-medium px-2 py-2 rounded text-slate-700 hover:text-brand-700 hover:bg-slate-50"
-								href="/#about"
-								onClick={closeMobile}
-							>
+							<NavItem to="/about" onClick={closeMobile}>
 								About
-							</a>
-							<a
-								className="block text-sm font-medium px-2 py-2 rounded text-slate-700 hover:text-brand-700 hover:bg-slate-50"
-								href="/#faqs"
-								onClick={closeMobile}
-							>
-								FAQs
-							</a>
+							</NavItem>
 
 							<div className="pt-2 border-t mt-2">
 								{!authenticated ? (
@@ -216,7 +226,7 @@ export default function Navbar() {
 							</div>
 						</div>
 					</div>
-				) : null}
+				)}
 			</header>
 
 			<CalculateModal

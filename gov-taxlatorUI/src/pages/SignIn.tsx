@@ -48,7 +48,7 @@ export default function SignIn() {
 	}
 
 	return (
-		<div className="bg-slate-200 min-h-[80vh] flex items-center justify-center px-4 py-10">
+		<div className="bg-slate-200 min-h-[80vh] w-full flex items-center justify-center px-4 py-10">
 			<div className="w-full max-w-md bg-white rounded-2xl border shadow-soft overflow-hidden">
 				<div className="p-6 border-b text-center">
 					<div className="w-12 h-12 mx-auto rounded bg-brand-700 text-white grid place-items-center font-bold">
@@ -58,6 +58,7 @@ export default function SignIn() {
 					<div className="text-xs text-slate-600">Sign in to your account</div>
 				</div>
 
+				{/* SIGNIN FORM */}
 				<form className="p-6" onSubmit={onSubmit}>
 					{error && (
 						<div className="mb-3 text-sm text-red-700 bg-red-50 border border-red-200 rounded p-2">
