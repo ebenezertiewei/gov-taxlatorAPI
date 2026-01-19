@@ -71,7 +71,7 @@ exports.signup = async (req, res) => {
 			emailSent = false;
 			console.error(
 				"❌ Signup email sending failed:",
-				mailErr?.message || mailErr
+				mailErr?.message || mailErr,
 			);
 			// Optional: you can also keep an "emailSendFailedAt" timestamp on the user for retry logic
 		}
@@ -100,7 +100,7 @@ exports.verifyEmail = async (req, res) => {
 
 		// Select verificationCode and verificationExpires explicitly
 		const user = await User.findOne({ email: normalizedEmail }).select(
-			"+verificationCode +verificationExpires"
+			"+verificationCode +verificationExpires",
 		);
 
 		if (!user)
@@ -156,7 +156,7 @@ exports.signin = async (req, res) => {
 		const normalizedEmail = String(email).trim().toLowerCase();
 
 		const user = await User.findOne({ email: normalizedEmail }).select(
-			"+password"
+			"+password",
 		);
 
 		if (!user)
@@ -182,6 +182,7 @@ exports.signin = async (req, res) => {
 		res.cookie("Authorization", "Bearer " + token, {
 			expires: new Date(Date.now() + 8 * 60 * 60 * 1000),
 			httpOnly: true,
+			sameSite: "none",
 			secure: process.env.NODE_ENV === "production",
 		});
 
@@ -273,7 +274,7 @@ exports.forgotPassword = async (req, res) => {
 			emailSent = false;
 			console.error(
 				"❌ Forgot password email sending failed:",
-				mailErr?.message || mailErr
+				mailErr?.message || mailErr,
 			);
 		}
 
@@ -376,7 +377,7 @@ exports.sendVerificationCode = async (req, res) => {
 			emailSent = false;
 			console.error(
 				"❌ Verification code email sending failed:",
-				mailErr?.message || mailErr
+				mailErr?.message || mailErr,
 			);
 		}
 
