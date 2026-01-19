@@ -23,7 +23,6 @@ import Terms_Conditions from "./pages/Terms_Conditions";
 export default function App() {
 	const { loading } = useAuth();
 
-	// ✅ GLOBAL AUTH LOADING GUARD (correct place)
 	if (loading) {
 		return (
 			<div className="min-h-screen flex items-center justify-center text-slate-600">
