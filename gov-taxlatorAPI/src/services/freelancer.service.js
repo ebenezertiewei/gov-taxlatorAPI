@@ -1,9 +1,7 @@
 // src/services/freelancer.service.js
 
-// 1️⃣ Import the tax bands
 const PAYE_TAX_BANDS = require("../utils/taxBands");
 
-// 2️⃣ Import utility for normalizing income
 const { normalizeAnnualIncome } = require("../utils/tax/freelancer.util");
 
 /**
@@ -12,7 +10,7 @@ const { normalizeAnnualIncome } = require("../utils/tax/freelancer.util");
 const calculateTaxableIncome = (
 	annualGrossIncome,
 	pension = 0,
-	expenses = 0
+	expenses = 0,
 ) => {
 	// Ensure deductions are numbers
 	pension = pension || 0;
@@ -38,7 +36,7 @@ const calculateFreelancerTax = async ({
 	const taxableIncome = calculateTaxableIncome(
 		annualGrossIncome,
 		pension,
-		expenses
+		expenses,
 	);
 
 	let remainingIncome = taxableIncome;

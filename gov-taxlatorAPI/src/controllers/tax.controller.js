@@ -3,7 +3,7 @@ const Joi = require("joi");
 const payeService = require("../services/payePit.service");
 const freelancerService = require("../services/freelancer.service");
 const citService = require("../services/cit.service");
-const TaxRecord = require("../models/taxRecordModel");
+const { saveHistory } = require("../services/history.service");
 
 // Validation
 const taxRequestSchema = Joi.object({
@@ -42,8 +42,7 @@ exports.calculateTax = async (req, res, next) => {
 				.json({ success: false, error: error.details[0].message });
 		}
 
-		// ✅ Backward/forward compatibility:
-		// If frontend sends `businessExpenses` for CIT, map it to `expenses` (what your service expects).
+		// Normalize field for CIT expenses
 		if (
 			value.taxType === "CIT" &&
 			value.expenses == null &&
@@ -70,19 +69,14 @@ exports.calculateTax = async (req, res, next) => {
 					.json({ success: false, error: "Unsupported tax type" });
 		}
 
+		// Save history for authenticated users
 		if (req.user) {
-			// Save only relevant fields
-			const record = {
+			await saveHistory({
 				userId: req.user._id,
-				taxType: value.taxType,
-				grossIncome: value.grossIncome,
-				frequency: value.frequency,
-				expenses: value.expenses,
-				revenue: value.revenue,
-				companySize: value.companySize,
-				...result,
-			};
-			await TaxRecord.create(record);
+				type: value.taxType,
+				input: value,
+				result,
+			});
 		}
 
 		res.status(200).json({ success: true, data: result });

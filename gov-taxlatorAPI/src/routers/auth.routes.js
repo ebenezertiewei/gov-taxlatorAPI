@@ -5,6 +5,12 @@ const authMiddleware = require("../middlewares/authMiddleware");
 
 const router = express.Router();
 
+const protect = require("../middlewares/authMiddleware");
+const authController = require("../controllers/authController");
+
+router.get("/me", protect, authController.me);
+
+
 // Auth routes
 router.post("/signup", authController.signup);
 router.post("/signin", authController.signin);

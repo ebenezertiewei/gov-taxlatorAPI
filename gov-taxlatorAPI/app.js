@@ -1,11 +1,13 @@
-// app.js
+// src/app.js
 const express = require("express");
 const helmet = require("helmet");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const path = require("path");
 
+/* ================= ROUTES ================= */
 const authRoutes = require("./src/routers/auth.routes");
+const historyRoutes = require("./src/routers/history.routes");
 const taxRoutes = require("./src/routers/tax.routes");
 const vatRoutes = require("./src/routers/vat.routes");
 
@@ -35,14 +37,12 @@ const allowedOrigins = [
 app.use(
 	cors({
 		origin: (origin, cb) => {
-			// Allow server-to-server / curl / Postman
-			if (!origin) return cb(null, true);
+			if (!origin) return cb(null, true); // Postman / curl
 
 			if (allowedOrigins.includes(origin)) {
 				return cb(null, true);
 			}
 
-			// ❗ DO NOT THROW
 			return cb(null, false);
 		},
 		credentials: true,
@@ -51,24 +51,27 @@ app.use(
 	}),
 );
 
-// Middlewares
+/* ================= MIDDLEWARES ================= */
 app.use(helmet());
 app.use(cookieParser());
 app.use(express.json({ limit: "1mb" }));
 app.use(express.urlencoded({ extended: true, limit: "1mb" }));
 
-// Serve static docs (PDFs)
+/* ================= DOCS ================= */
 app.use("/docs", express.static(path.join(__dirname, "/public/docs")));
 
-// Routes
+/* ================= API ROUTES ================= */
 app.use("/api/auth", authRoutes);
+app.use("/api/history", historyRoutes);
 app.use("/api/tax", taxRoutes);
 app.use("/api/vat", vatRoutes);
 
-// Health check endpoint
-app.get("/health", (req, res) => res.json({ status: "ok" }));
+/* ================= HEALTH CHECK ================= */
+app.get("/health", (req, res) => {
+	res.json({ status: "ok" });
+});
 
-// OAuth callback endpoint (Gmail / Google OAuth)
+/* ================= OAUTH CALLBACK ================= */
 app.get("/oauth2callback", (req, res) => {
 	const { code, error } = req.query;
 
@@ -87,14 +90,14 @@ app.get("/oauth2callback", (req, res) => {
 		);
 });
 
-// Root endpoint
+/* ================= ROOT ================= */
 app.get("/", (req, res) => {
 	res.send(
-		"✅ Gov-Taxlator API is running. Available routes: /api/auth, /api/tax, /api/vat, /health",
+		"✅ Gov-Taxlator API running. Routes: /api/auth, /api/history, /api/tax, /api/vat, /health",
 	);
 });
 
-// Error handling middleware
+/* ================= ERROR HANDLING ================= */
 app.use((err, req, res, next) => {
 	console.error(err.stack);
 	res.status(err.status || 500).json({
