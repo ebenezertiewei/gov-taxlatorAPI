@@ -1,12 +1,10 @@
-/**
- * Format number as Nigerian Naira currency
- * Example: 1234567 -> ₦1,234,567.00
- */
+// src/utils/formatCurrency.ts
 export function formatCurrency(amount: number): string {
-	if (!Number.isFinite(amount)) return "₦0.00";
+	if (!Number.isFinite(amount)) return "₦0";
 
-	return `₦${amount.toLocaleString("en-NG", {
-		minimumFractionDigits: 2,
-		maximumFractionDigits: 2,
-	})}`;
+	return new Intl.NumberFormat("en-NG", {
+		style: "currency",
+		currency: "NGN",
+		maximumFractionDigits: 0,
+	}).format(amount);
 }
