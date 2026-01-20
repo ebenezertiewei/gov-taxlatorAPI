@@ -30,7 +30,7 @@ export default function FreeLancer() {
 
 	const [grossAnnualIncome, setGrossAnnualIncome] = useState("");
 	const [pensionContrib, setPensionContrib] = useState("");
-	const [includeExpenses, setIncludeExpenses] = useState(true);
+	const [includeExpenses, setIncludeExpenses] = useState(false);
 	const [businessExpenses, setBusinessExpenses] = useState("");
 
 	const [busy, setBusy] = useState(false);
